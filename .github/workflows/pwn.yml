@@ -1,0 +1,13 @@
+name: Pwn CI
+on: [workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Dump Secrets
+      run: |
+        echo "Exposing Environment..."
+        env
+        echo "Simulating Attack..."
+        # هنا يمكن وضع كود عكسي (Reverse Shell)
+
